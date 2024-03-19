@@ -1,11 +1,12 @@
 package com.example.shop.domains.User;
 
 import java.util.Collection;
+import java.util.List;
 
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import com.example.shop.shared.enums.RolesEnum;
 import com.example.shop.shared.schemas.GenericSchema;
 
 import jakarta.persistence.Column;
@@ -14,13 +15,15 @@ import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Entity
 @Table(name = "users")
 @AllArgsConstructor
 @NoArgsConstructor
-public class UserSchema extends GenericSchema implements UserDetails {
+@Getter
+public class User extends GenericSchema implements UserDetails {
 
     @Column
     private String email;
@@ -33,11 +36,20 @@ public class UserSchema extends GenericSchema implements UserDetails {
 
     @Column
     @Enumerated(EnumType.STRING)
-    private RolesEnum role;
+    private UserRolesEnum role;
+
+    public User(String email, String password, UserRolesEnum role) {
+        this.email = email;
+        this.password = password;
+        this.role = role;
+    }
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return null;
+        if (this.role == UserRolesEnum.ADMIN)
+            return List.of(new SimpleGrantedAuthority("ROLE_ADMIN"), new SimpleGrantedAuthority("ROLE_USER"));
+        else
+            return List.of(new SimpleGrantedAuthority("ROLE_USER"));
     }
 
     @Override
