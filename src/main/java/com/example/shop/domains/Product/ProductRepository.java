@@ -1,4 +1,4 @@
-package com.example.shop.domains.User;
+package com.example.shop.domains.Product;
 
 import java.util.UUID;
 
@@ -7,5 +7,5 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface UserRepository extends JpaRepository<User, UUID> {
+public interface ProductRepository extends JpaRepository<Product, UUID> {
 }
